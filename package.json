@@ -5,11 +5,18 @@
   "author": "Marcus Castilho",
   "license": "MIT",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
+    "crypto": "^1.0.1",
     "dotenv": "^16.0.0",
-    "puppeteer": "^13.5.1"
+    "mysql2": "^2.3.3",
+    "puppeteer": "^13.5.1",
+    "sequelize": "^6.17.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }

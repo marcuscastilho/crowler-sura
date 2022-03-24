@@ -32,22 +32,39 @@ module.exports = {
       const month = String(data.getMonth() + 1).padStart(2, "0");
       const year = data.getFullYear();
 
-      await newPage.type(
-        "body > form > div:nth-child(8) > table.texto > tbody > tr > td > table > tbody > tr:nth-child(2) > td:nth-child(2) > input",
-        `${month + year}`
-      );
-      await newPage.click(
-        "body > form > div:nth-child(8) > table:nth-child(2) > tbody > tr > td > input"
-      );
+      // await newPage.type(
+      //   "body > form > div:nth-child(8) > table.texto > tbody > tr > td > table > tbody > tr:nth-child(2) > td:nth-child(2) > input",
+      //   `${month + year}`
+      // );
+      // await newPage.click(
+      //   "body > form > div:nth-child(8) > table:nth-child(2) > tbody > tr > td > input"
+      // );
 
+      // await newPage.evaluate(() => {
+      //   const iframe = document.querySelector("#detalhes");
+      //   console.log(iframe);
+      // });
 
-      await newPage.waitForSelector("body > form");
-      
-      await newPage.evaluate(() => {
-        console.log(document.querySelector('iframe[name=descricao]'))
-        continua();
-      })
-      
+      // const frameMeio = document.querySelector("frame[name=meio]");
+      // const frameDescricao =
+      //   frameMeio.contentWindow.document.body.querySelector(
+      //     "iframe[name=descricao]"
+      //   );
+      // const frameDetalhes =
+      //   frameDescricao.contentWindow.document.body.querySelector(
+      //     "iframe[id=detalhes]"
+      //   );
+      // const submitButton =
+      //   frameDetalhes.contentWindow.document.body.querySelector(
+      //     "input[name=salvar]"
+      //   );
+
+      // await newPage.waitForSelector("body > form");
+
+      // await newPage.evaluate(() => {
+      //   console.log(document.querySelector('iframe[name=descricao]'))
+      //   continua();
+      // })
     } catch (err) {
       console.log(err);
       // await browser.close();
