@@ -7,33 +7,66 @@ const { data_montage } = require("../utils/data_montage");
 
 class ProcessController {
   constructor() {}
-  
-  async main() {
-    const { batch } = await BatchController.findOne();
-    const averbations = await Averbations.findAll({
-      include: [
-        {
-          model: Smartboxes,
-          include: [
-            {
-              model: InsuranceCompany,
-              where: {
-                active_send: true,
-              },
-            },
-          ],
-        },
-      ],
-      where: {
-        send_insurance_system: false,
-        is_pending: false,
-        insurance_system: 'sura'
-      },
-      limit: 5
-    });
 
-    for(const averbation of averbations){
-      const worked_data = data_montage(averbation)
+  async main() {
+    try {
+      const { batch } = await BatchController.findOne();
+      const averbations = await Averbations.findAll({
+        include: [
+          {
+            model: Smartboxes,
+            include: [
+              {
+                model: InsuranceCompany,
+                where: {
+                  active_send: true,
+                },
+              },
+            ],
+          },
+        ],
+        where: {
+          send_insurance_system: false,
+          is_pending: false,
+          insurance_system: "sura",
+        },
+        limit: 10,
+      });
+
+      for (const averbation of averbations) {
+        try {
+          const worked_data = data_montage(averbation);
+          await webcrawler(worked_data);
+
+          await Averbations.update(
+            {
+              send_insurance_system: 1,
+              code_insurance_system: "200",
+              log_insurance_system: "Enviado com sucesso",
+            },
+            {
+              where: {
+                id: averbation.id,
+              },
+            }
+          );
+        } catch (err) {
+          await Averbations.update(
+            {
+              send_insurance_system: 1,
+              code_insurance_system: "500",
+              log_insurance_system: err.message,
+            },
+            {
+              where: {
+                id: averbation.id,
+              },
+            }
+          );
+        }
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 }

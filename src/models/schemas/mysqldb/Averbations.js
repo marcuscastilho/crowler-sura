@@ -161,6 +161,14 @@ const AverbationsSchema = {
     type: DataTypes.BOOLEAN,
     field: "enviado_simetrias",
   },
+  code_insurance_system: {
+    type: DataTypes.STRING,
+    field: "log_codigo_simetrias",
+  },
+  log_insurance_system: {
+    type: DataTypes.STRING,
+    field: "log_descricao_simetrias",
+  },
   smartbox_id: {
     type: DataTypes.BIGINT,
     allowNull: false,
