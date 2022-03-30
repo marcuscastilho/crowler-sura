@@ -13,6 +13,9 @@ const SmartboxesSchema = {
   status: {
     type: DataTypes.CHAR,
   },
+  sura_pass: {
+    type: DataTypes.STRING,
+  },
   smartbox_number: {
     type: DataTypes.CHAR,
     field: "smartbox_numero",

@@ -14,10 +14,6 @@ const InsuranceCompanySchema = {
     type: DataTypes.CHAR,
     field: "ambiente_simetria",
   },
-  sura_anchor: {
-    type: DataTypes.CHAR,
-    field: "sura_pass",
-  },
   active_send: {
     type: DataTypes.BOOLEAN,
     field: "envio_habilitado",
