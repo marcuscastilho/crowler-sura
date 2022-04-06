@@ -36,41 +36,40 @@ class ProcessController {
           is_pending: false,
           insurance_system: "sura",
         },
-        limit: 10,
+        limit: batch
       });
 
       for (const averbation of averbations) {
         try {
           const worked_data = data_montage(averbation);
-          console.log("worked_data", worked_data);
-          // await webcrawler(worked_data);
+          await webcrawler(worked_data);
 
-          // await Averbations.update(
-          //   {
-          //     send_insurance_system: 1,
-          //     code_insurance_system: "200",
-          //     log_insurance_system: "Enviado com sucesso",
-          //   },
-          //   {
-          //     where: {
-          //       id: averbation.id,
-          //     },
-          //   }
-          // );
+          await Averbations.update(
+            {
+              send_insurance_system: 1,
+              code_insurance_system: "200",
+              log_insurance_system: "Enviado com sucesso",
+            },
+            {
+              where: {
+                id: averbation.id,
+              },
+            }
+          );
         } catch (err) {
-          // console.log(err)
-          // await Averbations.update(
-          //   {
-          //     send_insurance_system: 1,
-          //     code_insurance_system: "500",
-          //     log_insurance_system: err.message,
-          //   },
-          //   {
-          //     where: {
-          //       id: averbation.id,
-          //     },
-          //   }
-          // );
+          console.log(err)
+          await Averbations.update(
+            {
+              send_insurance_system: 1,
+              code_insurance_system: "500",
+              log_insurance_system: err.message,
+            },
+            {
+              where: {
+                id: averbation.id,
+              },
+            }
+          );
         }
       }
     } catch (err) {

@@ -10,7 +10,7 @@ function delay(time) {
 module.exports = {
   webcrawler: async (data) => {
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       devtools: true,
     });
 
@@ -59,7 +59,7 @@ module.exports = {
           buttonInclusao.click();
         });
       }catch(err){
-        throw new Error('Não foi abrir o modal de embarque')
+        throw new Error('Não foi possível fazer o login')
       }
 
 
@@ -206,6 +206,8 @@ module.exports = {
       }catch(err){
         throw new Error('Não foi possível enviar o formulário de embarque')
       }
+      await browser.close();
+      return 
 
     } catch (err) {
       await browser.close();

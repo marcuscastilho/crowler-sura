@@ -8,5 +8,4 @@ sequelizeConnect();
 const process = new ProcessController();
 (async () => {
   await process.main();
-  // await webcrawler()
 })();
