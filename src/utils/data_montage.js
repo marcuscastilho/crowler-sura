@@ -15,7 +15,6 @@ module.exports = {
         charge_value: data.charge_value,
       };
     } catch (err) {
-      console.log(err)
       throw new Error("Não foi possível montar os dados para envio");
     }
   },
