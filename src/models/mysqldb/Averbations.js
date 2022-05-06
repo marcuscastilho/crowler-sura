@@ -14,6 +14,13 @@ class Averbations extends Model {
     this.belongsTo(models.Smartboxes, {
       foreignKey: "smartbox_id",
     });
+    this.hasMany(models.AverbationStamp, {
+      foreignKey: "averbation_id",
+    });
+    this.belongsToMany(models.SmartboxPolicies, {
+      through: models.AverbationStamp,
+      foreignKey: "averbation_id",
+    });
   }
 }
 

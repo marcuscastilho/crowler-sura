@@ -98,6 +98,71 @@ module.exports = {
 
       await delay(3000);
 
+
+      // ABRIR OPÇÕES DE APÓLICES
+      try {
+        await newPage.evaluate((data) => {
+          const frameMeio = document.querySelector('frame[name="meio"]');
+          const frameDescricao =
+            frameMeio.contentWindow.document.body.querySelector(
+              "iframe[name=descricao]"
+            );
+          const frameDetalhes =
+            frameDescricao.contentWindow.document.body.querySelector(
+              "iframe[id=detalhes]"
+            );
+
+            const runFocus = (frame, selector) => {
+              if (frame.contentWindow.document.body.querySelector(selector).onblur) {
+                frame.contentWindow.document.body.querySelector(selector).onblur();
+                frame.contentWindow.document.body.querySelector(selector).blur();
+              }
+            };
+            
+            const setValue = (frame, selector, property, value) => {
+              runFocus(frame, selector);
+              frame.contentWindow.document.body.querySelector(selector)[property] = value;
+              runFocus(frame, selector);
+            };
+            
+            const verifyPolice = (item, policies) => {
+              const item_formated = String(item).replace(/\s+/g, "");
+            
+              for (const policy of policies) {
+                const policy_formated = String(policy).replace(/\s+/g, "");
+                if (item_formated == policy_formated) {
+                  return true;
+                }
+              }
+            
+              return false;
+            };
+            
+            const totalInputs = Number(
+              frameDetalhes.contentWindow.document.body.querySelector("input[name=total1]")
+                .value
+            );
+            
+            
+            for (let i = 0; i < totalInputs; i++) {
+              const item = frameDetalhes.contentWindow.document.body.querySelector(
+                `table.txt > tbody > tr > td > table > tbody > tr:nth-child(${
+                  i + 2
+                }) > td:nth-child(4)`
+              ).textContent;
+            
+              const existPolicy = verifyPolice(item, data.policies);
+            
+              setValue(frameDetalhes, `input[name=checkbox${i}]`, "checked", existPolicy);
+            }
+
+        }, data);
+      } catch (err) {
+        throw new Error("Não foi abrir opções de apólices");
+      }
+
+      await delay(3000);
+
       // CONFIMAR OPÇÕES DE APÓLICES
       try {
         await newPage.evaluate(() => {
@@ -148,10 +213,11 @@ module.exports = {
             }
           };
 
-          const setValue = (frame, selector, value) => {
+          const setValue = (frame, selector, property, value) => {
             runFocus(frame, selector);
-            frame.contentWindow.document.body.querySelector(selector).value =
-              value;
+            frame.contentWindow.document.body.querySelector(selector)[
+              property
+            ] = value;
             runFocus(frame, selector);
           };
 
@@ -164,28 +230,51 @@ module.exports = {
           setValue(
             frameDescricao,
             "input[name=Documento0]",
+            "value",
             data.document_number
           );
 
           setValue(
             frameDescricao,
             "select[name=Modelo0]",
+            "value",
             anchors[data.document_type]
           );
 
-          setValue(frameDescricao, "input[name=DataEmb0]", date_formated);
+          setValue(
+            frameDescricao,
+            "input[name=DataEmb0]",
+            "value",
+            date_formated
+          );
 
-          setValue(frameDescricao, "input[name=Veiculo0]", "ABC0000");
+          setValue(frameDescricao, "input[name=Veiculo0]", "value", "ABC0000");
 
-          setValue(frameDescricao, "input[name=UfOrig0]", data.origin_uf);
+          setValue(
+            frameDescricao,
+            "input[name=UfOrig0]",
+            "value",
+            data.origin_uf
+          );
 
-          setValue(frameDescricao, "input[name=UfDest0]", data.destination_uf);
+          setValue(
+            frameDescricao,
+            "input[name=UfDest0]",
+            "value",
+            data.destination_uf
+          );
 
-          setValue(frameDescricao, "input[name=UrbanoSN0]", data.is_urban);
+          setValue(
+            frameDescricao,
+            "input[name=UrbanoSN0]",
+            "checked",
+            data.is_urban
+          );
 
           setValue(
             frameDescricao,
             "input[name=ValorMercad0]",
+            "value",
             data.charge_value
           );
         }, data);
@@ -220,6 +309,7 @@ module.exports = {
         throw new Error("Não foi possível enviar o formulário de embarque");
       }
 
+      await browser.close();
 
       return;
     } catch (err) {

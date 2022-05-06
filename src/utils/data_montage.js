@@ -3,9 +3,11 @@ const { decrypt } = require("../utils/crypto_key");
 module.exports = {
   data_montage: (data) => {
     try {
+      const policies = data.SmartboxPolicies.map((row) => row.policy_number);
       return {
         cnpj: String(data.Smartbox.cnpj).replace(/[^a-zA-Z0-9]/g, ""),
         password: decrypt(data.Smartbox.sura_pass),
+        policies,
         document_number: data.document_number,
         document_type: data.document_type,
         boarding_date: data.boarding_date || data.averbation_date,
