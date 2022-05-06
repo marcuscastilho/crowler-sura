@@ -55,6 +55,10 @@ const AverbationsSchema = {
     type: DataTypes.DATE,
     field: "data_averbacao",
   },
+  send_insurance_system_date: {
+    type: DataTypes.DATE,
+    field: "data_envio_sistema_assegurador",
+  },
   file_id: {
     type: DataTypes.CHAR,
   },

@@ -1,3 +1,5 @@
+const moment = require("moment-timezone");
+moment.tz.setDefault(process.env.TIME_ZONE);
 const Chalk = require("../utils/chalk");
 const { BatchController } = require("../models/mysqldb/BatchController");
 const { Averbations } = require("../models/mysqldb/Averbations");
@@ -14,6 +16,9 @@ class ProcessController {
     try {
       Chalk.info("ProcessController", "Buscando as averbações.");
       const { batch } = await BatchController.findOne();
+      const month = moment().format('MM');
+      const year = moment().format("YYYY") 
+      const date =  moment(`${year}-${month}-01`).format("YYYY-MM-DD")
 
       const averbations = await Averbations.findAll({
         include: [
@@ -22,9 +27,6 @@ class ProcessController {
             include: [
               {
                 model: InsuranceCompany,
-                where: {
-                  active_send: true,
-                },
               },
             ],
           },
@@ -33,9 +35,17 @@ class ProcessController {
           send_insurance_system: false,
           is_pending: false,
           insurance_system: "sura",
+          averbation_date: {
+            [Op.gte]: date,
+          },
+          "$Smartbox.sura_pass$": {
+            [Op.not]: null,
+          },
+          "$Smartbox->InsuranceCompany.envio_habilitado$": true,
         },
         limit: batch,
       });
+
 
       for (const averbation of averbations) {
         try {
@@ -48,6 +58,7 @@ class ProcessController {
               send_insurance_system: 1,
               code_insurance_system: "200",
               log_insurance_system: "Enviado com sucesso",
+              send_insurance_system_date: moment().format("YYYY-MM-DD HH:mm:ss")
             },
             {
               where: {
@@ -60,8 +71,8 @@ class ProcessController {
           await Averbations.update(
             {
               send_insurance_system: 1,
-              code_insurance_system: "func",
-              log_insurance_system: `func- ${err.message}`,
+              log_insurance_system: err.message,
+              send_insurance_system_date: moment().format("YYYY-MM-DD HH:mm:ss")
             },
             {
               where: {
