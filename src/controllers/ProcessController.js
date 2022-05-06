@@ -9,7 +9,7 @@ const { AverbationStamp } = require("../models/mysqldb/AverbationStamp");
 const { SmartboxPolicies } = require("../models/mysqldb/SmartboxPolicies");
 const { webcrawler } = require("../utils/webcrawler");
 const { data_montage } = require("../utils/data_montage");
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 
 class ProcessController {
   constructor() {}
